@@ -11,13 +11,12 @@ using UnityEngine;
 
 namespace TheKarenMod.System
 {
-    //[UpdateAfter(typeof(GroupReceiveItem))]
+    [UpdateAfter(typeof(GroupReceiveItem))]
     public class KarenSystem : GameSystemBase, IModSystem
     {
         private EntityQuery m_AwaitingOrderGroups;
         private EntityQuery m_ReadyToOrderGroups;
         private EntityQuery m_Customers;
-        private EntityQuery m_Player;
 
         public int m_NumWaiting = 0;
         int karen_type_id;
@@ -38,12 +37,6 @@ namespace TheKarenMod.System
             {
                 typeof(CCustomer),
                 typeof(CCustomerType)
-            });
-
-
-            m_Player = GetEntityQuery(new ComponentType[]
-            {
-                typeof(CPlayer)
             });
 
             karen_type_id = GDOUtils.GetCustomGameDataObject<KarenCustomerType>().ID;
@@ -85,6 +78,8 @@ namespace TheKarenMod.System
                     }
                 }
 
+                awaiting_order_groups.Dispose();
+                ready_to_order_groups.Dispose();
                 m_NumWaiting = awaiting_order_groups.Length + ready_to_order_groups.Length;
             }
         }
@@ -92,7 +87,7 @@ namespace TheKarenMod.System
         private bool KarenInGroup(Entity group)
         {
             bool value = false;
-            var customers = m_Customers.ToEntityArray(Allocator.Temp);
+            NativeArray<Entity> customers = m_Customers.ToEntityArray(Allocator.Temp);
 
             for (int i = 0; i < customers.Length; i++)
             {
@@ -112,6 +107,7 @@ namespace TheKarenMod.System
                 }
             }
 
+            customers.Dispose();
             return value;
         }
     }
