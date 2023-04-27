@@ -1,13 +1,10 @@
 ﻿using Kitchen;
 using KitchenData;
-using KitchenLib.References;
 using KitchenLib.Utils;
 using KitchenMods;
-using System.Linq;
-using TheKarenMod.Card;
 using Unity.Collections;
 using Unity.Entities;
-using UnityEngine;
+using TheKarenMod.CustType;
 
 namespace TheKarenMod.System
 {
@@ -17,6 +14,7 @@ namespace TheKarenMod.System
         private EntityQuery m_AwaitingOrderGroups;
         private EntityQuery m_ReadyToOrderGroups;
         private EntityQuery m_Customers;
+        private EntityQuery m_Players;
 
         public int m_NumWaiting = 0;
         int karen_type_id;
@@ -78,9 +76,9 @@ namespace TheKarenMod.System
                     }
                 }
 
+                m_NumWaiting = awaiting_order_groups.Length + ready_to_order_groups.Length;
                 awaiting_order_groups.Dispose();
                 ready_to_order_groups.Dispose();
-                m_NumWaiting = awaiting_order_groups.Length + ready_to_order_groups.Length;
             }
         }
 

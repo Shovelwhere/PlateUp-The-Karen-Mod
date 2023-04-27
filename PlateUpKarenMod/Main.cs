@@ -2,15 +2,12 @@
 using KitchenData;
 using System.Reflection;
 using TheKarenMod.Card;
-using KitchenLib.References;
-using System.Diagnostics;
 using UnityEngine;
 using KitchenLib.Utils;
-using System.Collections.Generic;
 using TheKarenMod.Hats;
 using KitchenMods;
 using System.Linq;
-using Kitchen;
+using TheKarenMod.CustType;
 
 namespace TheKarenMod
 {
