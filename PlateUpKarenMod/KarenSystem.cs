@@ -14,10 +14,10 @@ namespace TheKarenMod.System
         private EntityQuery m_AwaitingOrderGroups;
         private EntityQuery m_ReadyToOrderGroups;
         private EntityQuery m_Customers;
-        private EntityQuery m_Players;
 
         public int m_NumWaiting = 0;
-        int karen_type_id;
+        int m_KarenTypeID;
+        int m_MegaKarenTypeID;
 
         protected override void Initialise()
         {
@@ -37,7 +37,8 @@ namespace TheKarenMod.System
                 typeof(CCustomerType)
             });
 
-            karen_type_id = GDOUtils.GetCustomGameDataObject<KarenCustomerType>().ID;
+            m_KarenTypeID = GDOUtils.GetCustomGameDataObject<KarenCustomerType>().ID;
+            m_MegaKarenTypeID = GDOUtils.GetCustomGameDataObject<MegaKarenCustomerType>().ID;
         }
 
         protected override void OnUpdate()
@@ -46,6 +47,8 @@ namespace TheKarenMod.System
             //if there is, then it means that there are people who are served, so minus the patience from all the karen's tables
             if (HasStatus((RestaurantStatus)VariousUtils.GetID("karen")))
             {
+                SetKarenSpeeds();
+
                 NativeArray<Entity> awaiting_order_groups = m_AwaitingOrderGroups.ToEntityArray(Allocator.Temp);
                 NativeArray<Entity> ready_to_order_groups = m_ReadyToOrderGroups.ToEntityArray(Allocator.Temp);
 
@@ -57,7 +60,7 @@ namespace TheKarenMod.System
                         {
                             if (Require(awaiting_order_groups[i], out CPatience cPatience))
                             {
-                                cPatience.RemainingTime -= 0.025f;
+                                cPatience.RemainingTime -= 0.03f;
                                 EntityManager.SetComponentData(awaiting_order_groups[i], cPatience);
                             }
                         }
@@ -69,7 +72,7 @@ namespace TheKarenMod.System
                         {
                             if (Require(ready_to_order_groups[i], out CPatience cPatience))
                             {
-                                cPatience.RemainingTime -= 0.025f;
+                                cPatience.RemainingTime -= 0.03f;
                                 EntityManager.SetComponentData(ready_to_order_groups[i], cPatience);
                             }
                         }
@@ -93,7 +96,7 @@ namespace TheKarenMod.System
                 {
                     if (Require(customers[i], out CCustomerType cCustomerType))
                     {
-                        if (cCustomerType.Type == karen_type_id)
+                        if (cCustomerType.Type == m_KarenTypeID || cCustomerType.Type == m_MegaKarenTypeID)
                         {
                             if (cBelongsToGroup.Group == group)
                             {
@@ -107,6 +110,28 @@ namespace TheKarenMod.System
 
             customers.Dispose();
             return value;
+        }
+
+        private void SetKarenSpeeds()
+        {
+            NativeArray<Entity> customers = m_Customers.ToEntityArray(Allocator.Temp);
+
+            for (int i = 0; i < customers.Length; i++)
+            {
+                if (Require(customers[i], out CCustomerType cCustomerType))
+                {
+                    if (cCustomerType.Type == m_KarenTypeID || cCustomerType.Type == m_MegaKarenTypeID)
+                    {
+                        if (Require(customers[i], out CCustomer cCustomer))
+                        {
+                            cCustomer.Speed = 1.5f;
+                            EntityManager.SetComponentData(customers[i], cCustomer);
+                        }
+                    }
+                }
+            }
+
+            customers.Dispose();
         }
     }
 }

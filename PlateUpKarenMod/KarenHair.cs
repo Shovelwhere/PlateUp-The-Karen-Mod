@@ -21,14 +21,39 @@ namespace TheKarenMod.Hats
 
         public override void OnRegister(PlayerCosmetic player_cosmetic)
         {
-            GameObject Prefab = player_cosmetic.Visual;
-            PlayerOutfitComponent player_outfit_component = Prefab.AddComponent<PlayerOutfitComponent>();
-            player_outfit_component.Renderers.Add(GameObjectUtils.GetChildObject(Prefab, "Hair").GetComponent<SkinnedMeshRenderer>());
-            MaterialUtils.ApplyMaterial<SkinnedMeshRenderer>(Prefab, "Hair", new Material[] {
+            PlayerOutfitComponent player_outfit_component = player_cosmetic.Visual.AddComponent<PlayerOutfitComponent>();
+            player_outfit_component.Renderers.Add(GameObjectUtils.GetChildObject(player_cosmetic.Visual, "Hair").GetComponent<SkinnedMeshRenderer>());
+            MaterialUtils.ApplyMaterial<SkinnedMeshRenderer>(player_cosmetic.Visual, "Hair", new Material[] {
                 MaterialUtils.GetExistingMaterial("Wax")
             });
+        }
+    }
 
+    public class MegaKarenHairHat : CustomPlayerCosmetic
+    {
+        public override string UniqueNameID => "MegaKarenHairHat";
+        public override CosmeticType CosmeticType => CosmeticType.Hat;
+        public override GameObject Visual => Mod.bundle.LoadAsset<GameObject>("MegaKarenHairHat");
+        public override bool BlockHats => true;
 
+        public override void OnRegister(PlayerCosmetic player_cosmetic)
+        {
+            PlayerOutfitComponent player_outfit_component = player_cosmetic.Visual.AddComponent<PlayerOutfitComponent>();
+            
+            player_outfit_component.Renderers.Add(GameObjectUtils.GetChildObject(player_cosmetic.Visual, "Hair").GetComponent<SkinnedMeshRenderer>());
+            MaterialUtils.ApplyMaterial<SkinnedMeshRenderer>(player_cosmetic.Visual, "Hair", new Material[] {
+                MaterialUtils.GetExistingMaterial("Sack")
+            });
+
+            player_outfit_component.Renderers.Add(GameObjectUtils.GetChildObject(player_cosmetic.Visual, "Frame").GetComponent<SkinnedMeshRenderer>());
+            MaterialUtils.ApplyMaterial<SkinnedMeshRenderer>(player_cosmetic.Visual, "Frame", new Material[] {
+                MaterialUtils.GetExistingMaterial("Wood - Dark")
+            });
+
+            player_outfit_component.Renderers.Add(GameObjectUtils.GetChildObject(player_cosmetic.Visual, "Lens").GetComponent<SkinnedMeshRenderer>());
+            MaterialUtils.ApplyMaterial<SkinnedMeshRenderer>(player_cosmetic.Visual, "Lens", new Material[] {
+                MaterialUtils.GetExistingMaterial("Clothing Black Shiny")
+            });
         }
     }
 }
