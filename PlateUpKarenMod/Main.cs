@@ -16,7 +16,7 @@ namespace TheKarenMod
     {
         public const string MOD_GUID = "Shovelwhere.PlateUp.TheKarenMod";
         public const string MOD_NAME = "TheKarenMod";
-        public const string MOD_VERSION = "0.0.1";
+        public const string MOD_VERSION = "1.0.1";
         public const string MOD_AUTHOR = "Shovelwhere";
         public const string MOD_GAMEVERSION = ">=1.1.3";
 
